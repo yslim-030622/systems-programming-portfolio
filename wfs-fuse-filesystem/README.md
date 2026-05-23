@@ -1,24 +1,35 @@
 # WFS: Userspace Filesystem with FUSE
 
-WFS is a small Unix-like filesystem implemented in userspace with FUSE. It stores metadata and file contents in a disk image, maps that image into memory, and implements the filesystem callbacks that let normal commands such as `ls`, `mkdir`, `touch`, `cat`, and `rm` operate on it.
+WFS는 작은 disk image를 실제 filesystem처럼 다룰 수 있게 만든 userspace filesystem입니다. FUSE callback을 구현해서 `ls`, `mkdir`, `touch`, `cat`, `rm` 같은 일반 command가 이 filesystem 위에서 동작하도록 구성했습니다.
 
-## What It Implements
+WFS is a small Unix-like filesystem implemented in userspace with FUSE. It stores metadata and file contents inside a disk image, maps that image into memory, and exposes filesystem behavior through FUSE operations.
 
-- Disk image initialization with `mkfs`
-- Superblock layout and metadata offsets
-- Inode and data-block bitmaps
-- Root directory initialization
-- Path resolution through directory entries
-- File and directory creation
-- `read`, `write`, `mknod`, `mkdir`, `unlink`, `rmdir`, `readdir`, `getattr`, and `truncate` behavior
-- Direct block pointers plus an indirect block for larger files
-- Timestamp updates for access, modification, and metadata changes
-- `statfs` reporting
-- `user.color` extended attributes for colored directory listings
+## Why I Built It
+
+파일시스템은 단순히 file read/write만 처리하는 코드가 아닙니다. inode, directory entry, bitmap, block allocation, timestamp 같은 metadata가 서로 일관되게 움직여야 합니다. 이 프로젝트는 그 내부 구조를 직접 구현해 보기 위한 작업입니다.
+
+Filesystem work is a good systems exercise because every operation has to keep user-visible behavior and on-disk metadata in sync.
+
+## What It Does
+
+- Initializes a disk image with `mkfs`
+- Lays out the superblock, inode bitmap, data bitmap, inode region, and data blocks
+- Resolves absolute paths by walking directory entries
+- Supports file and directory creation/removal
+- Implements FUSE operations such as `getattr`, `readdir`, `mknod`, `mkdir`, `unlink`, `rmdir`, `read`, `write`, `truncate`, and `statfs`
+- Uses direct blocks and an indirect block for file contents
+- Updates access, modification, and metadata-change timestamps
+- Supports a `user.color` extended attribute
+
+## Implementation Notes
+
+`wfs.c` maps the disk image once and uses pointer arithmetic to access filesystem structures. Allocation is bitmap-based: inode bits track active inodes, and data bits track allocated data blocks. Directories are regular inodes whose data blocks contain directory entries.
+
+`mkfs.c` creates the initial disk layout and root inode. `wfs.h` defines the on-disk structures shared by both programs.
 
 ## Build
 
-Install FUSE development headers first if your environment does not already have them.
+Install FUSE development headers first.
 
 ```sh
 make
@@ -53,10 +64,8 @@ Unmount when finished:
 fusermount -u mnt
 ```
 
-On macOS with macFUSE, the unmount command may be different.
-
 ## Files
 
-- `wfs.c` - FUSE callbacks, block allocation, inode operations, path resolution, file I/O, directories, timestamps, and xattrs
-- `wfs.h` - on-disk structures and constants
-- `mkfs.c` - disk image formatter
+- `wfs.c`: FUSE callbacks, allocation, inode operations, directories, file I/O, timestamps, and xattrs
+- `wfs.h`: on-disk structures and constants
+- `mkfs.c`: disk image formatter
