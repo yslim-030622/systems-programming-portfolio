@@ -4,6 +4,12 @@
 
 WFS는 작은 disk image를 FUSE로 mount해서 쓰는 userspace filesystem입니다. 파일시스템이 내부에서 metadata를 어떻게 관리하는지 직접 구현해 보기 위한 프로젝트였습니다.
 
+### 먼저 볼 파일
+
+- `wfs.c`: FUSE callbacks, path lookup, inode/block allocation, file I/O
+- `wfs.h`: on-disk superblock, inode, directory entry layout
+- `mkfs.c`: disk image formatting and root inode initialization
+
 ### 구현 내용
 
 - `mkfs`를 통한 disk image 초기화
@@ -28,6 +34,12 @@ make FUSE_PKG=fuse3
 ## English
 
 WFS is a small FUSE filesystem backed by a disk image. It was built to practice how filesystem metadata is laid out and kept consistent.
+
+### Start Here
+
+- `wfs.c`: FUSE callbacks, path lookup, inode/block allocation, file I/O
+- `wfs.h`: on-disk superblock, inode, and directory-entry layout
+- `mkfs.c`: disk image formatting and root inode initialization
 
 ### What It Handles
 

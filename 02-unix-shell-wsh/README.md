@@ -4,6 +4,12 @@
 
 `wsh`는 C로 만든 작은 Unix-style shell입니다. 명령어를 읽고, built-in인지 외부 프로그램인지 판단하고, 필요한 경우 child process를 만들어 실행합니다.
 
+### 먼저 볼 파일
+
+- `wsh.c`: parser, built-ins, alias/history, fork/exec, pipeline execution
+- `hash_map.c`: alias table storage
+- `dynamic_array.c`: command history storage
+
 ### 지원 기능
 
 - interactive mode와 batch mode
@@ -29,6 +35,12 @@ make wsh-dbg
 ## English
 
 `wsh` is a compact shell written in C. It reads commands, handles built-ins, launches external programs, and connects pipelines when needed.
+
+### Start Here
+
+- `wsh.c`: parser, built-ins, alias/history, fork/exec, pipeline execution
+- `hash_map.c`: alias table storage
+- `dynamic_array.c`: command history storage
 
 ### What It Supports
 

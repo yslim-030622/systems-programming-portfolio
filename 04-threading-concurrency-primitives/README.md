@@ -4,6 +4,12 @@
 
 `pthread`와 POSIX semaphore로 만든 작은 synchronization 라이브러리입니다. thread들이 shared state에 안전하게 접근하도록 reader-writer lock과 bounded buffer를 구현했습니다.
 
+### 먼저 볼 파일
+
+- `src/readers_writers.c`: writer-priority reader-writer lock
+- `src/sync_utils.c`: bounded buffer and synchronization object setup/cleanup
+- `include/sync_utils.h`: lock and buffer data structures
+
 ### 구현 내용
 
 - writer-priority reader-writer lock
@@ -22,6 +28,12 @@ make
 ## English
 
 Small synchronization utilities written in C with pthreads and POSIX semaphores.
+
+### Start Here
+
+- `src/readers_writers.c`: writer-priority reader-writer lock
+- `src/sync_utils.c`: bounded buffer and synchronization object setup/cleanup
+- `include/sync_utils.h`: lock and buffer data structures
 
 ### What It Includes
 
